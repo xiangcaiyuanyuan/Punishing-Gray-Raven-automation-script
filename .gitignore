@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+*.egg
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Build artifacts
+src/build/
+src/__pycache__/
+config/progress.json
+
+# IDE
+.idea/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Runtime
+*.log
