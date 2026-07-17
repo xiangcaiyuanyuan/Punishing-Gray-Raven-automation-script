@@ -3,6 +3,9 @@ import os
 import pyautogui
 from PIL import Image
 import numpy as np
+from utils.logger import get_logger
+
+logger = get_logger()
 
 CONFIDENCE_THRESHOLD = 0.8
 
@@ -34,5 +37,5 @@ def find_image(img_name):
     except pyautogui.ImageNotFoundException:
         return None
     except (OSError, ValueError) as e:
-        print(f"[警告] 查找图片失败 {img_name}: {e}")
+        logger.warning(f"查找图片失败 {img_name}: {e}")
         return None

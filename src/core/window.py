@@ -6,6 +6,9 @@ import os
 import json
 import pyautogui
 import pygetwindow as gw
+from utils.logger import get_logger
+
+logger = get_logger()
 
 WINDOW_WIDTH = 460
 WINDOW_HEIGHT = 340
@@ -297,7 +300,7 @@ class StatusWindow:
         old = self.selected_module
         self.selected_module = self.module_var.get()
         self._update_module_hint()
-        print(f"[调试] 模块切换: {old} -> {self.selected_module}")
+        logger.debug(f"模块切换: {old} -> {self.selected_module}")
         pf = get_progress_file_path()
         if not os.path.exists(pf):
             self.start_index = 0
@@ -308,14 +311,14 @@ class StatusWindow:
         if self.is_running:
             return
 
-        print(f"[调试] 点击开始按钮，当前选择模块: {self.selected_module}")
+        logger.debug(f"点击开始按钮，当前选择模块: {self.selected_module}")
 
         self.is_interrupted = False
         self.start_index = 0
         pf = get_progress_file_path()
 
-        print(f"[调试] 检查进度文件: {pf}")
-        print(f"[调试] 文件是否存在: {os.path.exists(pf)}")
+        logger.debug(f"检查进度文件: {pf}")
+        logger.debug(f"文件是否存在: {os.path.exists(pf)}")
 
         if os.path.exists(pf):
             try:
@@ -323,7 +326,7 @@ class StatusWindow:
                     saved = json.load(f)
                 sm = saved.get('module')
                 si = saved.get('index', 0)
-                print(f"[调试] 读取到的数据: module={sm}, index={si}")
+                logger.debug(f"读取到的数据: module={sm}, index={si}")
 
                 if sm == self.selected_module and si > 0:
                     resp = messagebox.askyesno(
@@ -332,14 +335,14 @@ class StatusWindow:
                     )
                     if resp:
                         self.start_index = si
-                        print(f"[调试] 从第 {si + 1} 步继续执行")
+                        logger.debug(f"从第 {si + 1} 步继续执行")
                     else:
                         os.remove(pf)
-                        print(f"[调试] 用户选择重新开始，删除进度文件")
+                        logger.debug("用户选择重新开始，删除进度文件")
                 else:
-                    print(f"[调试] 模块不匹配或索引为0，不恢复进度")
+                    logger.debug("模块不匹配或索引为0，不恢复进度")
             except Exception as e:
-                print(f"[调试] 读取进度文件失败: {e}")
+                logger.error(f"读取进度文件失败: {e}")
 
         self.is_running = True
         self.start_button.config(state='disabled',
@@ -365,7 +368,7 @@ class StatusWindow:
 
         time.sleep(1)
 
-        print(f"[调试] _start_automation 调用 run_automation，传递 module: {self.selected_module}")
+        logger.debug(f"_start_automation 调用 run_automation，传递 module: {self.selected_module}")
         from KyrieAuto.src.main import run_automation
         run_automation(self, self.selected_module, self.start_index)
 
@@ -495,7 +498,7 @@ class StatusWindow:
             return
 
         if not self.pause_event.is_set():
-            print("[等待] 检测到loading，等待游戏响应...")
+            logger.info("检测到loading，等待游戏响应...")
 
         start = time.time()
 
@@ -503,7 +506,7 @@ class StatusWindow:
             elapsed = time.time() - start
 
             if elapsed > timeout:
-                print(f"[警告] 等待超时({timeout}秒)，尝试ESC唤醒")
+                logger.warning(f"等待超时({timeout}秒)，尝试ESC唤醒")
 
                 old_pause = pyautogui.PAUSE
                 pyautogui.PAUSE = 0
@@ -516,11 +519,11 @@ class StatusWindow:
                                 for img in ['加载中', '升级'])
 
                     if not still:
-                        print("[成功] ESC唤醒成功，恢复执行")
+                        logger.info("ESC唤醒成功，恢复执行")
                         self.pause_event.set()
                         break
                     else:
-                        print("[提示] 仍在loading，重置计时器继续等待...")
+                        logger.info("仍在loading，重置计时器继续等待...")
                         start = time.time()
                 finally:
                     pyautogui.PAUSE = old_pause

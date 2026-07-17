@@ -14,7 +14,12 @@ env/
 # Build artifacts
 src/build/
 src/__pycache__/
+src/干爆战双帕尼尼/
+src/干爆战双帕尼尼.zip
 config/progress.json
+
+# Scripts
+rename_images.sh
 
 # IDE
 .idea/

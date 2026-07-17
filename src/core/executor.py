@@ -2,6 +2,9 @@ import time
 import random
 import pyautogui
 from utils.helpers import find_image
+from utils.logger import get_logger
+
+logger = get_logger()
 
 # 鼠标点击后偏移量（避免遮挡识别区域）
 MOVE_OFFSET = 20
@@ -202,7 +205,7 @@ def execute_task(task, window, should_exit=True):
             for option in options:
                 if execute_task(option, window, should_exit=False):
                     return True
-            print(f"[提示] 选择分支的所有选项均未匹配,跳过此步骤")
+            logger.info("选择分支的所有选项均未匹配,跳过此步骤")
             return True
 
         elif task_type == 'combo':
@@ -264,7 +267,7 @@ def execute_task(task, window, should_exit=True):
                     window.root.after(0, lambda msg=error_msg: window.show_failed(msg))
                 return False
             else:
-                print(f"[提示] 等待图片超时: {img_name} (超时{timeout}秒)，继续执行")
+                logger.info(f"等待图片超时: {img_name} (超时{timeout}秒)，继续执行")
                 return True
 
         elif task_type == 'key_press_until_image':
@@ -301,7 +304,7 @@ def execute_task(task, window, should_exit=True):
                     return False
 
         else:
-            print(f"未知任务类型: {task_type}")
+            logger.warning(f"未知任务类型: {task_type}")
             return False
 
     elif isinstance(task, list):
@@ -321,5 +324,5 @@ def execute_task(task, window, should_exit=True):
         return False
 
     else:
-        print(f"无效任务格式: {type(task)}")
+        logger.warning(f"无效任务格式: {type(task)}")
         return False

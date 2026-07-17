@@ -10,6 +10,9 @@ from tasks.task_modules import TASK_MODULES
 from core.window import StatusWindow
 from core.executor import execute_task
 from utils.helpers import find_image
+from utils.logger import get_logger
+
+logger = get_logger()
 
 pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = False
@@ -68,8 +71,8 @@ def run_automation(window, module_key='日常任务', start_index=0):
         module_name = module_info['name']
         tasks = module_info['tasks']
 
-        print(f"[调试] run_automation 接收到的 module_key: {module_key}")
-        print(f"[调试] 解析后的 module_name: {module_name}")
+        logger.debug(f"run_automation 接收到的 module_key: {module_key}")
+        logger.debug(f"解析后的 module_name: {module_name}")
 
         window.root.after(0, lambda: window.update_status(f"✅ 正在运行: {module_name}"))
 
@@ -77,16 +80,15 @@ def run_automation(window, module_key='日常任务', start_index=0):
             window.root.after(0, lambda: window.show_failed(f"模块 '{module_name}' 的任务尚未配置"))
             return
 
-        print(f"\n========== 开始执行 {module_name} ==========")
-        print(f"总任务数: {len(tasks)}")
-        print(f"起始索引: {start_index}")
-        print("=" * 40)
-        print(f"进度文件路径: {PROGRESS_FILE}")
+        logger.info(f"========== 开始执行 {module_name} ==========")
+        logger.info(f"总任务数: {len(tasks)}")
+        logger.info(f"起始索引: {start_index}")
+        logger.info(f"进度文件路径: {PROGRESS_FILE}")
 
         for i in range(start_index, len(tasks)):
             if window.check_interrupt():
-                print(f"\n[中断] 在步骤 {i + 1} 被用户中断")
-                print(f"[调试] 保存进度 - module_key: {module_key}, index: {i}")
+                logger.warning(f"在步骤 {i + 1} 被用户中断")
+                logger.debug(f"保存进度 - module_key: {module_key}, index: {i}")
                 save_progress(module_key, i, is_completed=False)
                 window.root.after(0, lambda: window.show_interrupted())
                 return
@@ -94,24 +96,24 @@ def run_automation(window, module_key='日常任务', start_index=0):
             task = tasks[i]
             task_desc = get_task_description(task, i)
 
-            print(f"\n[执行] 步骤 {i + 1}/{len(tasks)}: {task_desc}")
-            print(f"       任务详情: {task}")
+            logger.info(f"步骤 {i + 1}/{len(tasks)}: {task_desc}")
+            logger.debug(f"任务详情: {task}")
             window.root.after(0,
                               lambda idx=i + 1, desc=task_desc: window.update_status(f" {desc} ({idx}/{len(tasks)})"))
 
             success = execute_task(task, window, should_exit=False)
 
             if success:
-                print(f"[成功] 步骤 {i + 1} 执行完成")
+                logger.info(f"步骤 {i + 1} 执行完成")
                 if task.get('type') != 'loop':
-                    print(f"[调试] 保存进度 - module_key: {module_key}, index: {i}")
+                    logger.debug(f"保存进度 - module_key: {module_key}, index: {i}")
                     save_progress(module_key, i, is_completed=True)
                 else:
-                    print(f"[调试] loop任务完成，不保存进度")
+                    logger.debug("loop任务完成，不保存进度")
             else:
-                print(f"[失败] 步骤 {i + 1} 执行失败")
-                print(f"       任务详情: {task}")
-                print(f"[调试] 保存进度 - module_key: {module_key}, index: {i}")
+                logger.error(f"步骤 {i + 1} 执行失败")
+                logger.debug(f"任务详情: {task}")
+                logger.debug(f"保存进度 - module_key: {module_key}, index: {i}")
                 save_progress(module_key, i, is_completed=False)
                 window.root.after(0, lambda t=task, d=task_desc: window.show_failed(
                     f"步骤 {i + 1}/{len(tasks)} 执行失败\n"
@@ -121,18 +123,18 @@ def run_automation(window, module_key='日常任务', start_index=0):
                 return
 
         if not window.check_interrupt():
-            print(f"\n========== {module_name} 执行完成 ==========\n")
+            logger.info(f"========== {module_name} 执行完成 ==========")
             if os.path.exists(PROGRESS_FILE):
                 os.remove(PROGRESS_FILE)
             window.root.after(0, window.show_completed)
         elif tasks and tasks[-1].get('type') == 'loop':
-            print(f"\n========== {module_name} 循环任务被中断 ==========\n")
+            logger.info(f"========== {module_name} 循环任务被中断 ==========")
             if os.path.exists(PROGRESS_FILE):
                 os.remove(PROGRESS_FILE)
             window.root.after(0, window.show_completed)
 
     except Exception as e:
-        print(f"\n[异常] 发生未知错误: {e}")
+        logger.error(f"发生未知错误: {e}")
         traceback.print_exc()
         error_msg = str(e)
         window.root.after(0, lambda msg=error_msg: window.show_failed(f"发生未知错误：{msg}"))
@@ -149,13 +151,13 @@ def save_progress(module_key, index, is_completed=False):
     try:
         progress_dir = os.path.dirname(PROGRESS_FILE)
         os.makedirs(progress_dir, exist_ok=True)
-        print(f"[调试] 准备保存 - module: {module_key}, index: {index}, completed: {is_completed}")
-        print(f"正在保存进度到: {PROGRESS_FILE}")
+        logger.debug(f"准备保存 - module: {module_key}, index: {index}, completed: {is_completed}")
+        logger.info(f"保存进度到: {PROGRESS_FILE}")
         with open(PROGRESS_FILE, 'w', encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
-        print(f"进度保存成功")
+        logger.debug("进度保存成功")
     except Exception as e:
-        print(f"保存进度失败: {e}")
+        logger.error(f"保存进度失败: {e}")
         traceback.print_exc()
 
 
@@ -227,10 +229,10 @@ if __name__ == '__main__':
                 if hasattr(key, 'char') and key.char == 'e':
                     if not status_window.check_interrupt() and status_window.is_running:
                         status_window.is_interrupted = True
-                        print("\n[中断] 收到 Alt+E 信号，等待当前步骤完成后停止...")
+                        logger.warning("收到 Alt+E 信号，等待当前步骤完成后停止...")
                 status_window._alt_pressed = False
         except Exception as e:
-            print(e)
+            logger.error(f"键盘监听异常: {e}")
 
 
     def on_release(key):
@@ -238,7 +240,7 @@ if __name__ == '__main__':
             if key == kb_listener.Key.alt_l or key == kb_listener.Key.alt_r:
                 status_window._alt_pressed = False
         except Exception as e:
-            print(e)
+            logger.error(f"键盘释放监听异常: {e}")
 
 
     listener = kb_listener.Listener(on_press=on_press, on_release=on_release)
