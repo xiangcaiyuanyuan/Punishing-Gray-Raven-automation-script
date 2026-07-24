@@ -6,7 +6,7 @@ import os
 import json
 import pyautogui
 import pygetwindow as gw
-from utils.logger import get_logger
+from KyrieAuto.src.utils.logger import get_logger
 
 logger = get_logger()
 

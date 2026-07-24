@@ -1,8 +1,8 @@
 import time
 import random
 import pyautogui
-from utils.helpers import find_image
-from utils.logger import get_logger
+from KyrieAuto.src.utils.helpers import find_image
+from KyrieAuto.src.utils.logger import get_logger
 
 logger = get_logger()
 
@@ -130,7 +130,7 @@ def execute_scroll(amount, img_name=None, window=None, should_exit=True):
     remaining = amount
 
     old_pause = pyautogui.PAUSE
-    pyautogui.PAUSE = 0.1
+    pyautogui.PAUSE = 0.05
     try:
         while abs(remaining) >= step:
             pyautogui.scroll(step if remaining > 0 else -step)

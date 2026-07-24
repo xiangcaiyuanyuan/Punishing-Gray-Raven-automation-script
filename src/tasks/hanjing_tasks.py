@@ -18,10 +18,24 @@ def create_hanjing():
                         TaskBuilder.click('严霜_1'),
                         TaskBuilder.click('下一步_1'),
                     ),
-                    fail_task=TaskBuilder.combo()
+                    fail_task=TaskBuilder.combo(
+                        TaskBuilder.choice(
+                            TaskBuilder.scroll(2000, 'C'),
+                            TaskBuilder.scroll(2000, 'C_1')
+                        ),
+                        TaskBuilder.scroll(-1500),
+                        TaskBuilder.click('下一步_1'),
+                        TaskBuilder.click('启动资金'),
+                        TaskBuilder.click('确定_5'),
+                        TaskBuilder.click('招募',2),
+                        TaskBuilder.wait(5),
+                        TaskBuilder.key_press('esc'),
+                    )
                 )
             )
         )
     ]
     return task
+
+
 HANJING_TASKS = create_hanjing()

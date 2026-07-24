@@ -3,7 +3,7 @@ import os
 import pyautogui
 from PIL import Image
 import numpy as np
-from utils.logger import get_logger
+from KyrieAuto.src.utils.logger import get_logger
 
 logger = get_logger()
 
