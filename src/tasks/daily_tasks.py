@@ -75,6 +75,7 @@ def create_daily_tasks():
 
         # --- 宿舍委托 ---
         TaskBuilder.click('宿舍'),
+        TaskBuilder.choice(TaskBuilder.click('关闭')),
         TaskBuilder.click('委托'),
         TaskBuilder.choice(
             TaskBuilder.combo(
@@ -180,12 +181,26 @@ def create_daily_tasks():
                     fail_task=None
                 ),
                 TaskBuilder.click('确定'),
-                TaskBuilder.key_press('esc', 2)
             ),
             fail_task=TaskBuilder.combo(
-
+                TaskBuilder.click('多重挑战'),
+                TaskBuilder.check(
+                    image='参数_1',
+                    success_task=None,
+                    fail_task=TaskBuilder.combo(
+                        TaskBuilder.click('预设'),
+                        TaskBuilder.click('新增'),
+                        TaskBuilder.click('选择'),
+                        TaskBuilder.click('编入'),
+                        TaskBuilder.click('使用'),
+                    )
+                ),
+                TaskBuilder.click('开始'),
+                TaskBuilder.key_press_until_image('=', '返回'),
+                TaskBuilder.click('返回'),
             )#手动挑战设计
         ),
+        TaskBuilder.key_press('esc', 2),
 
         # --- 最终领取 ---
         create_claim_task(),
@@ -202,6 +217,7 @@ def create_daily_tasks():
         TaskBuilder.choice(
             *[TaskBuilder.click(f'bp_{i}') for i in range(1, 20)] + [TaskBuilder.click('bp')]
         ),
+        TaskBuilder.wait(['领取_1_tmp','领取_1']),
         TaskBuilder.choice(
             TaskBuilder.click('确定_1')
         ),
@@ -214,5 +230,5 @@ def create_daily_tasks():
     ]
     return tasks
 
-DAILY_TASKS = create_daily_tasks()
 
+DAILY_TASKS = create_daily_tasks()
