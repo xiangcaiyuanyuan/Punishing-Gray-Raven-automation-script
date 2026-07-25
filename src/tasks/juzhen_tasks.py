@@ -33,7 +33,7 @@ def create_juzhen_tasks():
                 TaskBuilder.click('攻击'),
                 TaskBuilder.click('确定_3'),
                 TaskBuilder.click('出击'),
-                TaskBuilder.key_press_until_image('v', '领取_2', interval=0.5),
+                TaskBuilder.key_press_until_image('=', '领取_2', interval=0.5),
                 TaskBuilder.key_press('esc'),
                 TaskBuilder.click('确认'),
                 TaskBuilder.click('终止'),
