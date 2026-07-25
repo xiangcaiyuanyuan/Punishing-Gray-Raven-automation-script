@@ -3,9 +3,6 @@ import os
 import pyautogui
 from PIL import Image
 import numpy as np
-from KyrieAuto.src.utils.logger import get_logger
-
-logger = get_logger()
 
 CONFIDENCE_THRESHOLD = 0.8
 
@@ -19,23 +16,35 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-def find_image(img_name):
-    """在屏幕上查找图片，返回坐标区域或 None（自动补全 .png 后缀）"""
-    # 非字符串（如 int）直接返回 None，防止 '.'
-    if not isinstance(img_name, str):
-        return None
-    try:
-        # 若未指定扩展名则自动补全 .png
-        if '.' not in img_name:
-            img_name = f'{img_name}.png'
-        img_path = resource_path(os.path.join('data', 'imgs', img_name))
+def find_image(img_names):
+    """
+    在屏幕上查找图片，支持单个字符串或字符串列表。
+    返回第一个成功匹配的坐标区域 (left, top, width, height)，
+    如果全部未找到则返回 None。
+    自动补全 .png 后缀。
+    """
+    # 统一转为列表处理
+    if isinstance(img_names, str):
+        img_names = [img_names]
+    elif not isinstance(img_names, list):
+        return None   # 非法输入
 
-        # OpenCV 无法直接读取中文路径，改用 PIL + numpy
-        pil_img = Image.open(img_path)
-        np_img = np.array(pil_img)
-        return pyautogui.locateOnScreen(np_img, confidence=CONFIDENCE_THRESHOLD)
-    except pyautogui.ImageNotFoundException:
-        return None
-    except (OSError, ValueError) as e:
-        logger.warning(f"查找图片失败 {img_name}: {e}")
-        return None
+    for name in img_names:
+        if not isinstance(name, str):
+            continue
+        try:
+            # 补全扩展名
+            if '.' not in name:
+                name = f'{name}.png'
+            img_path = resource_path(os.path.join('data', 'imgs', name))
+            pil_img = Image.open(img_path)
+            np_img = np.array(pil_img)
+            result = pyautogui.locateOnScreen(np_img, confidence=CONFIDENCE_THRESHOLD)
+            if result is not None:
+                return result   # 找到即返回
+        except pyautogui.ImageNotFoundException:
+            continue
+        except (OSError, ValueError) as e:
+            print(f"[警告] 查找图片失败 {name}: {e}")
+            continue
+    return None
