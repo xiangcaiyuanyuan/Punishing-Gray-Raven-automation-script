@@ -106,6 +106,14 @@ def build_with_spec():
         # 创建 config 文件夹（每次都重新创建）
         target_path = os.path.join(src_dir, output_dir)
         if os.path.exists(target_path):
+            logs_path = os.path.join(target_path, 'logs')
+            if os.path.exists(logs_path):
+                try:
+                    shutil.rmtree(logs_path)
+                    print(f"[信息] 已清理旧文件夹: logs")
+                except Exception as e:
+                    print(f"[警告] 清理 logs 文件夹失败: {e}")
+
             if create_config_folder(target_path):
                 print(f"\n[信息] 输出位置: {target_path}")
             else:
