@@ -61,8 +61,8 @@ class TaskBuilder:
 
     @staticmethod
     def reset_menu():
-        """创建一个通用的返回主菜单任务块"""
-        return {'type': 'reset_menu'}
+        """创建一个通用的返回主菜单任务块（按 esc 直到活动出现，最多20次）"""
+        return TaskBuilder.key_press_until_image('esc', '活动', interval=0.3, max_attempts=20)
 
     @staticmethod
     def loop(task):
@@ -70,14 +70,17 @@ class TaskBuilder:
         return {'type': 'loop', 'task': task}
 
     @staticmethod
-    def key_press_until_image(key, target_image, interval=0.5):
-        """持续按键直到目标图片出现后停止"""
-        return {
+    def key_press_until_image(key, target_image, interval=0.5, max_attempts=None):
+        """持续按键直到目标图片出现后停止，可设置最大尝试次数"""
+        task = {
             'type': 'key_press_until_image',
             'key': key,
             'target_image': target_image,
-            'interval': interval
+            'interval': interval,
         }
+        if max_attempts is not None:
+            task['max_attempts'] = max_attempts
+        return task
 
 
 def create_claim_task():

@@ -166,9 +166,7 @@ def get_task_description(task, index):
     if isinstance(task, dict):
         task_type = task.get('type', 'click')
 
-        if task_type == 'reset_menu':
-            return "返回主菜单"
-        elif task_type == 'click':
+        if task_type == 'click':
             img = task.get('image', 'unknown')
             clicks = task.get('clicks', 1)
             return f"点击 [{img}] x{clicks}"

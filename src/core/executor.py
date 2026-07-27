@@ -154,17 +154,7 @@ def execute_task(task, window, should_exit=True):
     if isinstance(task, dict):
         task_type = task.get('type', 'click')
 
-        if task_type == 'reset_menu':
-            max_attempts = 20
-            for _ in range(max_attempts):
-                if window.check_interrupt():
-                    return False
-                if find_image('活动'):
-                    return True
-                pyautogui.press('esc')
-            return True
-
-        elif task_type == 'click':
+        if task_type == 'click':
             return execute_mouse_action(
                 task['image'],
                 click_times=task.get('clicks', 1),
@@ -274,9 +264,12 @@ def execute_task(task, window, should_exit=True):
             key = task.get('key', 'f')
             target = task.get('target_image')
             interval = task.get('interval', 0.5)
+            max_attempts = task.get('max_attempts')
             pyautogui.PAUSE = 0
-            while True:
+            attempt = 0
+            while max_attempts is None or attempt < max_attempts:
                 if window and window.check_interrupt():
+                    pyautogui.PAUSE = 1
                     return True
                 if window:
                     window.wait_if_paused()
@@ -285,7 +278,7 @@ def execute_task(task, window, should_exit=True):
                     pyautogui.PAUSE = 1
                     return True
 
-                # 按一次键后等待 interval
+                attempt += 1
                 pyautogui.press(key)
                 time.sleep(interval)
 
