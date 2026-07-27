@@ -231,8 +231,8 @@ def execute_task(task, window, should_exit=True):
             interval = task.get('interval', 0.5)
             fail_on_timeout = task.get('fail_on_timeout', True)
 
-            # image 不是字符串（None / 数字等）→ 纯延时等待
-            if not isinstance(img_name, str):
+            # image 为 None 或纯数字 → 纯延时等待；字符串/列表走图片检测
+            if img_name is None or isinstance(img_name, (int, float)):
                 time.sleep(timeout)
                 return True
 
@@ -253,11 +253,13 @@ def execute_task(task, window, should_exit=True):
 
             if fail_on_timeout:
                 if should_exit and window:
-                    error_msg = f"等待图片超时: {img_name} (超时{timeout}秒)"
+                    names = ' / '.join(img_name) if isinstance(img_name, list) else str(img_name)
+                    error_msg = f"等待图片超时: {names} (超时{timeout}秒)"
                     window.root.after(0, lambda msg=error_msg: window.show_failed(msg))
                 return False
             else:
-                logger.info(f"等待图片超时: {img_name} (超时{timeout}秒)，继续执行")
+                names = ' / '.join(img_name) if isinstance(img_name, list) else str(img_name)
+                logger.info(f"等待图片超时: {names} (超时{timeout}秒)，继续执行")
                 return True
 
         elif task_type == 'key_press_until_image':
