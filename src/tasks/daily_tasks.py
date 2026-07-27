@@ -217,7 +217,7 @@ def create_daily_tasks():
         TaskBuilder.choice(
             *[TaskBuilder.click(f'bp_{i}') for i in range(1, 20)] + [TaskBuilder.click('bp')]
         ),
-        TaskBuilder.wait(['领取_1_tmp','领取_1','评定']),#tmp要补充
+        TaskBuilder.wait(['领取_1_tmp','领取_1','评定']),
         TaskBuilder.choice(
             TaskBuilder.click('确定_1')
         ),
