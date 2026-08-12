@@ -1,5 +1,5 @@
 from KyrieAuto.src.core.task_builder import TaskBuilder
-def create_hanjing():
+def create_hanjing_tasks():
     task = [
         TaskBuilder.reset_menu(),
         TaskBuilder.click('战斗'),
@@ -27,7 +27,7 @@ def create_hanjing():
                         TaskBuilder.click('下一步_1'),
                         TaskBuilder.click('启动资金'),
                         TaskBuilder.click('确定_5'),
-                        TaskBuilder.click('招募',2),
+                        TaskBuilder.click('招募', 2),
                         TaskBuilder.wait(5),
                         TaskBuilder.key_press('esc'),
                     )
@@ -38,4 +38,4 @@ def create_hanjing():
     return task
 
 
-HANJING_TASKS = create_hanjing()
+HANJING_TASKS = create_hanjing_tasks()

@@ -6,6 +6,7 @@ import os
 import json
 import pyautogui
 import pygetwindow as gw
+from KyrieAuto.src.tasks.task_modules import DEFAULT_MODULE
 from KyrieAuto.src.utils.logger import get_logger
 
 logger = get_logger()
@@ -73,7 +74,7 @@ class StatusWindow:
 
         self._setup_styles()
 
-        self.selected_module = '日常任务'
+        self.selected_module = DEFAULT_MODULE
         self.start_index = 0
         self.is_interrupted = False
         self.is_running = False
@@ -155,8 +156,8 @@ class StatusWindow:
                  ).pack(anchor=tk.W)
 
         tk.Label(root_frame,
-                 text="自动化脚本 · 作者QQ:2976417128",
-                 font=('Microsoft YaHei', 9),
+                 text="B站：小圆香菜圆圆         抖音：可乐香菜圆圆",
+                 font=('Microsoft YaHei', 10),
                  fg=COLORS['text_secondary'], bg=COLORS['bg']
                  ).pack(anchor=tk.W, pady=(2, 0))
 
@@ -166,7 +167,7 @@ class StatusWindow:
         sec = tk.Frame(root_frame, bg=COLORS['bg'])
         sec.pack(fill=tk.X)
 
-        self.module_var = tk.StringVar(value='日常任务')
+        self.module_var = tk.StringVar(value=DEFAULT_MODULE)
 
         from KyrieAuto.src.main import TASK_MODULES
         items = list(TASK_MODULES.items())
@@ -185,7 +186,7 @@ class StatusWindow:
             cell.grid(row=r, column=c, sticky='ew')
 
             ttk.Radiobutton(
-                cell, text=info['name'],
+                cell, text=key,
                 variable=self.module_var, value=key,
                 command=self._on_module_change,
                 style='Module.TRadiobutton'
@@ -279,10 +280,7 @@ class StatusWindow:
     # ── 模块提示 ──
 
     def _update_module_hint(self):
-        from KyrieAuto.src.main import TASK_MODULES
-        info = TASK_MODULES.get(self.selected_module, {})
-        name = info.get('name', self.selected_module)
-        self.module_hint.config(text=f"当前选择：{name}")
+        self.module_hint.config(text=f"当前选择：{self.selected_module}")
 
     # ── 按钮 Hover ──
 

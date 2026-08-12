@@ -4,7 +4,7 @@
 from KyrieAuto.src.core.task_builder import TaskBuilder
 
 
-def create_diggings_task():
+def create_kuangqu_tasks():
     def one_time_process(index):
         return TaskBuilder.combo(
             TaskBuilder.click(f'矿区_{index}'),
@@ -16,7 +16,7 @@ def create_diggings_task():
                     TaskBuilder.click('返回'),
                     TaskBuilder.key_press('esc')
                 ),
-                fail_task=TaskBuilder.key_press('esc',2)
+                fail_task=TaskBuilder.key_press('esc', 2)
             )
         )
 
@@ -25,7 +25,7 @@ def create_diggings_task():
         TaskBuilder.click('战斗'),
         TaskBuilder.click('挑战'),
         TaskBuilder.click('矿区'),
-        *[one_time_process(index) for index in range(1,4)],
+        *[one_time_process(index) for index in range(1, 4)],
         TaskBuilder.scroll(100),
         one_time_process(index=4),
         TaskBuilder.click('奖励'),
@@ -35,4 +35,4 @@ def create_diggings_task():
     return tasks
 
 
-KUANGQU_TASKS = create_diggings_task()
+KUANGQU_TASKS = create_kuangqu_tasks()

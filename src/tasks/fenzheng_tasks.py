@@ -24,7 +24,7 @@ def create_fenzheng_tasks():
         TaskBuilder.click('战斗'),
         TaskBuilder.click('挑战'),
         TaskBuilder.click('纷争'),
-        *[one_time_process(index) for index in range(1,3)],
+        *[one_time_process(index) for index in range(1, 3)],
         TaskBuilder.reset_menu(),
         claim_weekly_rewards(),
         TaskBuilder.reset_menu()

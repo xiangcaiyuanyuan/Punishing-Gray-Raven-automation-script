@@ -32,7 +32,7 @@ def create_daily_tasks():
                         image='签到',
                         success_task=TaskBuilder.combo(
                             TaskBuilder.click('签到'),
-                            TaskBuilder.key_press('esc',2)
+                            TaskBuilder.key_press('esc', 2)
                         ),
                         fail_task=TaskBuilder.combo(
                             TaskBuilder.key_press('esc'),
@@ -40,7 +40,7 @@ def create_daily_tasks():
                                 image='签到',
                                 success_task=TaskBuilder.combo(
                                     TaskBuilder.click('签到'),
-                                    TaskBuilder.key_press('esc',2)
+                                    TaskBuilder.key_press('esc', 2)
                                 ),
                                 fail_task=None
                             )
@@ -68,7 +68,7 @@ def create_daily_tasks():
             success_task=TaskBuilder.combo(
                 TaskBuilder.click('血清'),
                 TaskBuilder.click('购买_1'),
-                TaskBuilder.key_press('esc',2),
+                TaskBuilder.key_press('esc', 2),
             ),
             fail_task=TaskBuilder.key_press('esc')
         ),
@@ -217,13 +217,13 @@ def create_daily_tasks():
         TaskBuilder.choice(
             *[TaskBuilder.click(f'bp_{i}') for i in range(1, 20)] + [TaskBuilder.click('bp')]
         ),
-        TaskBuilder.wait(['领取_1_tmp','领取_1','评定']),
+        TaskBuilder.wait(['领取_1_tmp', '领取_1', '评定']),
         TaskBuilder.choice(
             TaskBuilder.click('确定_1')
         ),
         TaskBuilder.wait('评定'),
         TaskBuilder.click('评定'),
-        TaskBuilder.choice(TaskBuilder.click('领取_1',2,2)),
+        TaskBuilder.choice(TaskBuilder.click('领取_1', 2, 2)),
         TaskBuilder.click('战略'),
         TaskBuilder.choice(TaskBuilder.click('领取_1')),
         TaskBuilder.reset_menu()

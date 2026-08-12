@@ -29,7 +29,7 @@ def create_juzhen_tasks():
                 TaskBuilder.click('确定_3'),
                 TaskBuilder.click('选择_1'),
                 TaskBuilder.click('决定'),
-                TaskBuilder.click('出发',2),
+                TaskBuilder.click('出发', 2),
                 TaskBuilder.click('攻击'),
                 TaskBuilder.click('确定_3'),
                 TaskBuilder.click('出击'),
@@ -38,7 +38,7 @@ def create_juzhen_tasks():
                 TaskBuilder.click('确认'),
                 TaskBuilder.click('终止'),
                 TaskBuilder.click('确认', 2),
-                TaskBuilder.click('下一页', 4,0.1),
+                TaskBuilder.click('下一页', 4, 0.1),
             )
         )
     ]

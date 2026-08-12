@@ -1,13 +1,12 @@
 import pyautogui
 import time
-import sys
 import os
 import json
 import threading
 import traceback
 from pynput import keyboard as kb_listener
-from tasks.task_modules import TASK_MODULES
-from core.window import StatusWindow
+from tasks.task_modules import TASK_MODULES, DEFAULT_MODULE
+from core.window import StatusWindow, get_progress_file_path
 from core.executor import execute_task
 from utils.helpers import find_image
 from utils.logger import get_logger
@@ -17,13 +16,8 @@ logger = get_logger()
 pyautogui.PAUSE = 1
 pyautogui.FAILSAFE = False
 
-# 进度文件保存在 config 文件夹
-if getattr(sys, 'frozen', False):
-    base_dir = os.path.dirname(sys.executable)
-else:
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-
-PROGRESS_FILE = os.path.normpath(os.path.join(base_dir, 'config', 'progress.json'))
+# 进度文件路径（与 window.py 共用同一函数，避免逻辑重复）
+PROGRESS_FILE = get_progress_file_path()
 
 
 def pause_monitor(window, pause_images):
@@ -60,15 +54,15 @@ def pause_monitor(window, pause_images):
         time.sleep(0.1)
 
 
-def run_automation(window, module_key='日常任务', start_index=0):
+def run_automation(window, module_key=DEFAULT_MODULE, start_index=0):
     """执行自动化任务"""
     pause_image = ['加载中', '升级']
     monitor_thread = threading.Thread(target=pause_monitor, args=(window, pause_image), daemon=True)
     monitor_thread.start()
 
     try:
-        module_info = TASK_MODULES.get(module_key, TASK_MODULES['日常任务'])
-        module_name = module_info['name']
+        module_info = TASK_MODULES.get(module_key, TASK_MODULES[DEFAULT_MODULE])
+        module_name = module_key
         tasks = module_info['tasks']
 
         logger.debug(f"run_automation 接收到的 module_key: {module_key}")

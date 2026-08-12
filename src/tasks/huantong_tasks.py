@@ -55,7 +55,7 @@ def create_huantong_tasks():
         TaskBuilder.click('幻痛'),
         TaskBuilder.choice(
             TaskBuilder.combo(
-                TaskBuilder.offset_click('终极',1,0,100),
+                TaskBuilder.offset_click('终极', 1, 0, 100),
                 TaskBuilder.click('确定_2')
             )
         ),

@@ -23,6 +23,7 @@ rename_images.sh
 
 # IDE
 .idea/
+.claude/
 
 # OS
 Thumbs.db

@@ -38,22 +38,6 @@ def execute_mouse_action(img_name, click_times=1, interval=1, offset_x=0, offset
     return False
 
 
-def execute_click(imgs, click_times=1, window=None, should_exit=True):
-    """执行点击操作"""
-    if window:
-        window.wait_if_paused()
-
-    img_list = imgs if isinstance(imgs, list) else [imgs]
-
-    for img in img_list:
-        if execute_mouse_action(img, click_times=click_times, window=window, should_exit=False):
-            return True
-
-    if window and should_exit:
-        window.root.after(0, lambda: window.show_failed(f"未检索到图片: {img_list[0]}"))
-    return False
-
-
 def execute_key_press(key, press_times=1, interval=1, window=None, should_exit=True):
     """执行按键操作"""
     if window:
@@ -84,8 +68,8 @@ def execute_offset_click(img_name, click_times=1, offset_x=0, offset_y=0, window
     )
 
 
-def move_character(time_a, time_w, time_d, time_s):
-    """移动角色"""
+def move_character(sec_a, sec_w, sec_d, sec_s):
+    """按 WASD 方向移动角色，参数为各方向按住时长（秒）"""
     def move(key, seconds):
         if seconds <= 0:
             return
@@ -98,10 +82,10 @@ def move_character(time_a, time_w, time_d, time_s):
         finally:
             pyautogui.PAUSE = old_pause
 
-    move('a', time_a)
-    move('w', time_w)
-    move('d', time_d)
-    move('s', time_s)
+    move('a', sec_a)
+    move('w', sec_w)
+    move('d', sec_d)
+    move('s', sec_s)
 
 
 def execute_scroll(amount, img_name=None, window=None, should_exit=True):
@@ -184,9 +168,9 @@ def execute_task(task, window, should_exit=True):
 
         elif task_type == 'move':
             for action in task['actions']:
-                img_name, t_a, t_w, t_d, t_s = action
+                img_name, sec_a, sec_w, sec_d, sec_s = action
                 if find_image(img_name):
-                    move_character(t_a, t_w, t_d, t_s)
+                    move_character(sec_a, sec_w, sec_d, sec_s)
                     return True
             return False
 

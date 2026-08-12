@@ -1,8 +1,8 @@
 from KyrieAuto.src.core.task_builder import TaskBuilder
 
 
-def create_guitu():
-    tasks=[
+def create_guitu_tasks():
+    tasks = [
         TaskBuilder.reset_menu(),
         TaskBuilder.click('归途'),
         TaskBuilder.click('复制'),
@@ -22,4 +22,4 @@ def create_guitu():
     ]
     return tasks
 
-GUITU_TASKS = create_guitu()
+GUITU_TASKS = create_guitu_tasks()

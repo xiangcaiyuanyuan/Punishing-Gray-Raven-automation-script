@@ -44,11 +44,31 @@ def _get_log_dir():
     return os.path.join(base, 'logs')
 
 
+def _cleanup_old_logs(log_dir):
+    """删除非当天的日志文件"""
+    today = datetime.now().strftime('%Y%m%d')
+    try:
+        for f in os.listdir(log_dir):
+            if f.endswith('.log') and f'{today}.log' not in f:
+                path = os.path.join(log_dir, f)
+                try:
+                    os.remove(path)
+                    print(f"[日志] 已清理旧日志: {f}")
+                except OSError:
+                    pass
+    except OSError:
+        pass
+
+
 def setup_logger(name='Kyrie'):
     """配置并返回 logger 实例"""
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     logger.handlers.clear()
+
+    # ── 启动时清理非当天的日志 ──
+    log_dir = _get_log_dir()
+    _cleanup_old_logs(log_dir)
 
     # ── 终端处理器（INFO 及以上显示彩色日志）──
     console = logging.StreamHandler(sys.stdout)
