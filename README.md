@@ -35,7 +35,7 @@
 
 - **Python 3.13** + **pyautogui**（图像识别自动化）
 - **PIL** / **numpy**（图像读取与缩放；OpenCV 由 pyautogui 内部使用）
-- **pynput**（键盘监听，Alt+E 中断）
+- **pynput**（键盘监听）
 - **tkinter**（GUI 窗口）
 - **PyInstaller**（打包为 exe）
 
