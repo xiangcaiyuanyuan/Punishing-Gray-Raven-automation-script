@@ -62,7 +62,7 @@ class TaskBuilder:
     @staticmethod
     def reset_menu():
         """创建一个通用的返回主菜单任务块（按 esc 直到活动出现，最多20次）"""
-        return TaskBuilder.key_press_until_image('esc', '活动', interval=0.3, max_attempts=20)
+        return TaskBuilder.key_press_until_image('esc', '活动', interval=0.5, max_attempts=20)
 
     @staticmethod
     def loop(task):

@@ -6,8 +6,8 @@ import os
 import json
 import pyautogui
 import pygetwindow as gw
-from KyrieAuto.src.tasks.task_modules import DEFAULT_MODULE
-from KyrieAuto.src.utils.logger import get_logger
+from tasks.task_modules import DEFAULT_MODULE
+from utils.logger import get_logger
 
 logger = get_logger()
 
@@ -169,7 +169,7 @@ class StatusWindow:
 
         self.module_var = tk.StringVar(value=DEFAULT_MODULE)
 
-        from KyrieAuto.src.main import TASK_MODULES
+        from tasks.task_modules import TASK_MODULES
         items = list(TASK_MODULES.items())
         n = len(items)
         rows = (n + 2) // 3
@@ -357,6 +357,13 @@ class StatusWindow:
         try:
             win = gw.getWindowsWithTitle('战双帕弥什')
             if win:
+                # 若窗口被最小化则先还原，否则点击/截图都落在桌面上
+                if win[0].isMinimized:
+                    try:
+                        win[0].restore()
+                        time.sleep(0.5)
+                    except Exception:
+                        pass
                 win[0].activate()
                 time.sleep(0.5)
             else:
@@ -512,7 +519,7 @@ class StatusWindow:
                     pyautogui.press('esc')
                     time.sleep(0.8)
 
-                    from KyrieAuto.src.utils.helpers import find_image
+                    from utils.helpers import find_image
                     still = any(find_image(img) is not None
                                 for img in ['加载中', '升级'])
 

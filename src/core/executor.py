@@ -1,8 +1,8 @@
 import time
 import random
 import pyautogui
-from KyrieAuto.src.utils.helpers import find_image
-from KyrieAuto.src.utils.logger import get_logger
+from utils.helpers import find_image
+from utils.logger import get_logger
 
 logger = get_logger()
 

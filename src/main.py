@@ -8,7 +8,7 @@ from pynput import keyboard as kb_listener
 from tasks.task_modules import TASK_MODULES, DEFAULT_MODULE
 from core.window import StatusWindow, get_progress_file_path
 from core.executor import execute_task
-from utils.helpers import find_image
+from utils.helpers import find_image, init_image_scale
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -20,14 +20,16 @@ pyautogui.FAILSAFE = False
 PROGRESS_FILE = get_progress_file_path()
 
 
-def pause_monitor(window, pause_images):
-    """监控暂停状态，检测 loading 画面时暂停任务"""
+def pause_monitor(window, pause_images, stop_event):
+    """监控暂停状态，检测 loading 画面时暂停任务。
 
+    stop_event 被设置（任务结束/中断）时退出循环，停止截屏省资源。
+    """
     consecutive_loading = 0
     consecutive_normal = 0
     threshold = 2
 
-    while not window.is_interrupted:
+    while not window.is_interrupted and not stop_event.is_set():
         try:
             is_loading = any(find_image(img) is not None for img in pause_images)
 
@@ -56,8 +58,12 @@ def pause_monitor(window, pause_images):
 
 def run_automation(window, module_key=DEFAULT_MODULE, start_index=0):
     """执行自动化任务"""
+    # 游戏窗口已激活，检测分辨率并设置模板缩放系数
+    init_image_scale()
+
     pause_image = ['加载中', '升级']
-    monitor_thread = threading.Thread(target=pause_monitor, args=(window, pause_image), daemon=True)
+    stop_event = threading.Event()
+    monitor_thread = threading.Thread(target=pause_monitor, args=(window, pause_image, stop_event), daemon=True)
     monitor_thread.start()
 
     try:
@@ -132,6 +138,9 @@ def run_automation(window, module_key=DEFAULT_MODULE, start_index=0):
         traceback.print_exc()
         error_msg = str(e)
         window.root.after(0, lambda msg=error_msg: window.show_failed(f"发生未知错误：{msg}"))
+    finally:
+        # 无论完成/中断/异常，都停止 loading 监控线程，避免空转浪费资源
+        stop_event.set()
 
 
 def save_progress(module_key, index, is_completed=False):

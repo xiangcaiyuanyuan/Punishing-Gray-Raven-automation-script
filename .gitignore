@@ -17,6 +17,7 @@ src/__pycache__/
 src/干爆战双帕尼尼/
 src/干爆战双帕尼尼.zip
 config/progress.json
+src/config/
 
 # Scripts
 rename_images.sh

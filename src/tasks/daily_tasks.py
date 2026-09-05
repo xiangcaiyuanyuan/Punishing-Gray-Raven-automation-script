@@ -83,9 +83,11 @@ def create_daily_tasks():
                 TaskBuilder.key_press('esc', 1)
             )
         ),
-        TaskBuilder.combo(
-            TaskBuilder.click('派遣'),
-            TaskBuilder.key_press('esc', 1)
+        TaskBuilder.choice(
+            TaskBuilder.combo(
+                TaskBuilder.click('派遣'),
+                TaskBuilder.key_press('esc', 1)
+            ),
         ),
         TaskBuilder.choice(
             TaskBuilder.combo(
@@ -140,31 +142,18 @@ def create_daily_tasks():
         create_claim_task(),
         TaskBuilder.key_press('esc'),
 
-        # --- 仓库道具 (血清) ---
-        TaskBuilder.click('仓库'),
-        TaskBuilder.choice(
-            TaskBuilder.click('道具'),
-            TaskBuilder.click('道具_1')),
+        TaskBuilder.click('血清'),
         TaskBuilder.check(
-            image='血清_1',
+            image='血清_2',
             success_task=TaskBuilder.combo(
-                TaskBuilder.click('血清_1'),
-                TaskBuilder.click('加号', 3),
-                TaskBuilder.click('使用'),
-                TaskBuilder.key_press('esc', 1),
-                TaskBuilder.check(
-                    image='血清_1',
-                    success_task=TaskBuilder.combo(
-                        TaskBuilder.click('血清_1'),
-                        TaskBuilder.click('加号', 3),
-                        TaskBuilder.click('使用'),
-                        TaskBuilder.key_press('esc', 2),
-                    ),
-                    fail_task=TaskBuilder.key_press('esc', 1)
-                )
+                TaskBuilder.choice(TaskBuilder.click('血清_3', 2)),
+                TaskBuilder.choice(TaskBuilder.click('血清_2', 2)),
+                TaskBuilder.click('确定_2'),
+                TaskBuilder.key_press('esc')
             ),
-            fail_task=TaskBuilder.key_press('esc', 1)
+            fail_task=None
         ),
+        TaskBuilder.key_press('esc'),
 
         # --- 战斗资源 (拟战) ---
         TaskBuilder.click('战斗'),
@@ -180,7 +169,7 @@ def create_daily_tasks():
                     success_task=TaskBuilder.key_press('esc'),
                     fail_task=None
                 ),
-                TaskBuilder.click('确定'),
+                TaskBuilder.choice(TaskBuilder.click('确定'))
             ),
             fail_task=TaskBuilder.combo(
                 TaskBuilder.click('多重挑战'),
@@ -217,15 +206,10 @@ def create_daily_tasks():
         TaskBuilder.choice(
             *[TaskBuilder.click(f'bp_{i}') for i in range(1, 20)] + [TaskBuilder.click('bp')]
         ),
-        TaskBuilder.wait(['领取_1_tmp', '领取_1', '评定']),
+        TaskBuilder.wait(['领取_1_tmp', '领取_1', '情报', '确定_1']),
         TaskBuilder.choice(
             TaskBuilder.click('确定_1')
         ),
-        TaskBuilder.wait('评定'),
-        TaskBuilder.click('评定'),
-        TaskBuilder.choice(TaskBuilder.click('领取_1', 2, 2)),
-        TaskBuilder.click('战略'),
-        TaskBuilder.choice(TaskBuilder.click('领取_1')),
         TaskBuilder.reset_menu()
     ]
     return tasks
