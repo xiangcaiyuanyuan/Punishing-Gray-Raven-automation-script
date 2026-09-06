@@ -91,6 +91,7 @@ def create_claim_task():
             TaskBuilder.click('任务_1')
         ),
         TaskBuilder.choice(TaskBuilder.click('每日')),
+        TaskBuilder.choice(TaskBuilder.click('每日')),
         TaskBuilder.check(
             image='领取',
             success_task=TaskBuilder.combo(

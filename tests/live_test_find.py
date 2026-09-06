@@ -20,7 +20,7 @@ import numpy as np
 import utils.helpers as helpers
 
 # 目标图片（命令行参数，默认 血清_1）
-img_name = sys.argv[1] if len(sys.argv) > 1 else '血清_3'
+img_name = sys.argv[1] if len(sys.argv) > 1 else '情报'
 if '.' not in img_name:
     img_name += '.png'
 
@@ -62,7 +62,7 @@ except pyautogui.ImageNotFoundException:
     print("路径2 先截图再locate:      ❌ 未找到(异常)")
 
 # ===== 框出匹配区域并保存/打开 =====
-out_path = r'D:\PythonProject\KyrieAuto\src\tests\debug_live.png'
+out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'debug_live.png')
 if found_box is not None:
     draw = ImageDraw.Draw(shot)
     box = found_box

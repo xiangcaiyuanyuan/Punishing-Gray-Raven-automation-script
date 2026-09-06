@@ -142,7 +142,7 @@ def create_daily_tasks():
         create_claim_task(),
         TaskBuilder.key_press('esc'),
 
-        TaskBuilder.click('血清'),
+        TaskBuilder.click('血清_1'),
         TaskBuilder.check(
             image='血清_2',
             success_task=TaskBuilder.combo(
