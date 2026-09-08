@@ -205,6 +205,8 @@ def get_task_description(task, index):
             key = task.get('key', 'f')
             target = task.get('target_image', '?')
             return f"按键 [{key}] 直到 [{target}] 出现"
+        elif task_type == 'set_confidence':
+            return f"设置匹配阈值 {task.get('value')}"
         else:
             return f"未知任务类型: {task_type}"
     elif isinstance(task, list):

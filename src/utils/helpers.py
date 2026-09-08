@@ -168,6 +168,20 @@ def _scaled_template(pil_img):
     return pil_img.resize((new_w, new_h), Image.LANCZOS)
 
 
+def set_confidence(value):
+    """设置全局匹配置信度阈值（0~1），返回旧值；非法输入保持不变"""
+    global CONFIDENCE_THRESHOLD
+    try:
+        v = float(value)
+        if 0 < v <= 1:
+            old = CONFIDENCE_THRESHOLD
+            CONFIDENCE_THRESHOLD = v
+            return old
+    except (TypeError, ValueError):
+        pass
+    return CONFIDENCE_THRESHOLD
+
+
 def find_image(img_names):
     """
     在屏幕上查找图片，支持单个字符串或字符串列表。

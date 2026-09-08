@@ -1,7 +1,7 @@
 import time
 import random
 import pyautogui
-from utils.helpers import find_image
+from utils.helpers import find_image, set_confidence
 from utils.logger import get_logger
 
 logger = get_logger()
@@ -267,6 +267,11 @@ def execute_task(task, window, should_exit=True):
                 attempt += 1
                 pyautogui.press(key)
                 time.sleep(interval)
+
+        elif task_type == 'set_confidence':
+            old = set_confidence(task.get('value'))
+            logger.info(f"匹配置信度阈值 → {task.get('value')}（原 {old:.3f}）")
+            return True
 
         elif task_type == 'loop':
             loop_task = task.get('task')

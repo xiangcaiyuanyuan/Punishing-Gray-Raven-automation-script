@@ -65,6 +65,11 @@ class TaskBuilder:
         return TaskBuilder.key_press_until_image('esc', '活动', interval=0.5, max_attempts=20)
 
     @staticmethod
+    def set_confidence(value):
+        """临时调整图片匹配置信度阈值（0~1），影响后续所有图像检测"""
+        return {'type': 'set_confidence', 'value': value}
+
+    @staticmethod
     def loop(task):
         """创建循环任务，会一直重复执行直到用户中断"""
         return {'type': 'loop', 'task': task}
@@ -90,8 +95,9 @@ def create_claim_task():
             TaskBuilder.click('任务'),
             TaskBuilder.click('任务_1')
         ),
+        TaskBuilder.set_confidence(0.8),
         TaskBuilder.choice(TaskBuilder.click('每日')),
-        TaskBuilder.choice(TaskBuilder.click('每日')),
+        TaskBuilder.set_confidence(0.7),
         TaskBuilder.check(
             image='领取',
             success_task=TaskBuilder.combo(
