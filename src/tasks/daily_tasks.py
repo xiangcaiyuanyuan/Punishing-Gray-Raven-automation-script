@@ -210,6 +210,7 @@ def create_daily_tasks():
         TaskBuilder.choice(
             TaskBuilder.click('确定_1')
         ),
+        TaskBuilder.choice(TaskBuilder.click('领取_1')),
         TaskBuilder.reset_menu()
     ]
     return tasks
